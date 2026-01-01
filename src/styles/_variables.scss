@@ -1,0 +1,94 @@
+// Color Palette
+$primary-color: #2c3e50;
+$primary-light: #3d566e;
+$primary-dark: #1a252f;
+
+$accent-color: #27ae60;
+$accent-light: #2ecc71;
+$accent-dark: #1e8449;
+
+$warn-color: #e74c3c;
+$warn-light: #ec7063;
+$warn-dark: #c0392b;
+
+$warning-color: #e67e22;
+$warning-light: #f39c12;
+$warning-dark: #d35400;
+
+// Neutral Colors
+$text-primary: #2c3e50;
+$text-secondary: #666666;
+$text-disabled: #999999;
+
+$background-light: #f5f5f5;
+$background-white: #ffffff;
+$border-color: #e0e0e0;
+
+// Dark Theme Colors
+$dark-background: #121212;
+$dark-surface: #1e1e1e;
+$dark-card: #2a2a2a;
+$dark-text-primary: #ffffff;
+$dark-text-secondary: #aaaaaa;
+$dark-border: #333333;
+
+// Breakpoints
+$breakpoint-xs: 576px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1400px;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-xxl: 3rem;
+
+// Border Radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+$border-radius-round: 50%;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+$shadow-xl: 0 15px 30px rgba(0, 0, 0, 0.2);
+
+// Typography
+$font-family-base: Roboto, "Helvetica Neue", sans-serif;
+$font-family-monospace: "Roboto Mono", monospace;
+
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+$font-size-4xl: 2.25rem;
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Z-Index Layers
+$z-index-dropdown: 100;
+$z-index-sticky: 200;
+$z-index-fixed: 300;
+$z-index-modal-backdrop: 400;
+$z-index-modal: 500;
+$z-index-popover: 600;
+$z-index-tooltip: 700;

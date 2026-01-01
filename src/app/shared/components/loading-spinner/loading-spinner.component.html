@@ -1,0 +1,8 @@
+<div class="loading-overlay" [class.fullscreen]="fullscreen">
+  <div class="spinner-container">
+    <mat-spinner [diameter]="diameter"></mat-spinner>
+    @if (message) {
+      <p class="loading-message">{{ message }}</p>
+    }
+  </div>
+</div>

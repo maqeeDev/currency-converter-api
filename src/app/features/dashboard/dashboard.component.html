@@ -1,0 +1,151 @@
+<div class="dashboard-container">
+  <!-- Welcome Section -->
+  <section class="welcome-section">
+    <h1>Welcome back, {{ authStore.username() }}!</h1>
+    <p>What would you like to do today?</p>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <mat-card class="action-card" routerLink="/convert">
+      <mat-icon class="action-icon primary">currency_exchange</mat-icon>
+      <h3>Convert Currency</h3>
+      <p>Convert between currencies with real-time rates</p>
+    </mat-card>
+
+    <mat-card class="action-card" routerLink="/currencies/rates">
+      <mat-icon class="action-icon accent">trending_up</mat-icon>
+      <h3>View Rates</h3>
+      <p>Check current exchange rates</p>
+    </mat-card>
+
+    <mat-card class="action-card" routerLink="/history">
+      <mat-icon class="action-icon">history</mat-icon>
+      <h3>History</h3>
+      <p>View your conversion history</p>
+    </mat-card>
+
+    <mat-card class="action-card" routerLink="/currencies">
+      <mat-icon class="action-icon">attach_money</mat-icon>
+      <h3>Currencies</h3>
+      <p>Browse all supported currencies</p>
+    </mat-card>
+  </section>
+
+  <!-- Recent Conversions -->
+  <section class="recent-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-icon mat-card-avatar>history</mat-icon>
+        <mat-card-title>Recent Conversions</mat-card-title>
+        <mat-card-subtitle>Your last conversions</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (conversionStore.recentConversions().length > 0) {
+          <mat-list>
+            @for (conversion of conversionStore.recentConversions().slice(0, 5); track conversion.timestamp) {
+              <mat-list-item class="conversion-item">
+                <mat-icon matListItemIcon>swap_horiz</mat-icon>
+                <div matListItemTitle>
+                  {{ conversion.originalAmount | number:'1.2-2' }} {{ conversion.fromCurrency }}
+                  →
+                  {{ conversion.convertedAmount | number:'1.2-2' }} {{ conversion.toCurrency }}
+                </div>
+                <div matListItemLine>
+                  Rate: {{ conversion.exchangeRate | number:'1.4-6' }}
+                </div>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+            }
+          </mat-list>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>currency_exchange</mat-icon>
+            <p>No recent conversions</p>
+            <a mat-stroked-button color="primary" routerLink="/convert">
+              Make your first conversion
+            </a>
+          </div>
+        }
+      </mat-card-content>
+
+      @if (conversionStore.recentConversions().length > 0) {
+        <mat-card-actions align="end">
+          <a mat-button color="primary" routerLink="/history">
+            View All History
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+        </mat-card-actions>
+      }
+    </mat-card>
+  </section>
+
+  <!-- Favorite Pairs -->
+  <section class="favorites-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-icon mat-card-avatar>star</mat-icon>
+        <mat-card-title>Favorite Currency Pairs</mat-card-title>
+        <mat-card-subtitle>Quick access to your favorites</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (conversionStore.favorites().length > 0) {
+          <div class="favorites-grid">
+            @for (pair of conversionStore.favorites(); track pair.fromCurrency + pair.toCurrency) {
+              <button
+                mat-stroked-button
+                class="favorite-chip"
+                routerLink="/convert"
+                [queryParams]="{ from: pair.fromCurrency, to: pair.toCurrency }"
+              >
+                {{ pair.fromCurrency }} → {{ pair.toCurrency }}
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>star_border</mat-icon>
+            <p>No favorite pairs yet</p>
+            <p class="hint">Star currency pairs while converting to add them here</p>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Admin Quick Access -->
+  @if (authStore.isAdmin()) {
+    <section class="admin-section">
+      <mat-card class="admin-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="admin-icon">admin_panel_settings</mat-icon>
+          <mat-card-title>Admin Panel</mat-card-title>
+          <mat-card-subtitle>System management</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="admin-actions">
+            <a mat-stroked-button routerLink="/admin/dashboard">
+              <mat-icon>dashboard</mat-icon>
+              Dashboard
+            </a>
+            <a mat-stroked-button routerLink="/admin/health">
+              <mat-icon>health_and_safety</mat-icon>
+              Health
+            </a>
+            <a mat-stroked-button routerLink="/admin/cache">
+              <mat-icon>memory</mat-icon>
+              Cache
+            </a>
+            <a mat-stroked-button routerLink="/admin/logs">
+              <mat-icon>article</mat-icon>
+              Logs
+            </a>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  }
+</div>

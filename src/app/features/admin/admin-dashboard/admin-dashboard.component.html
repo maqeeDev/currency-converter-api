@@ -1,0 +1,113 @@
+<div class="admin-dashboard">
+  <header class="page-header">
+    <h1>Admin Dashboard</h1>
+    <p>System overview and API statistics</p>
+  </header>
+
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading statistics..."></app-loading-spinner>
+  } @else if (error()) {
+    <app-error-alert [message]="error()!" [retryable]="true" (onRetry)="loadData()"></app-error-alert>
+  } @else if (stats()) {
+    <!-- Key Metrics -->
+    <section class="metrics-grid">
+      <mat-card class="metric-card">
+        <mat-icon>api</mat-icon>
+        <div class="metric-content">
+          <span class="metric-value">{{ stats()!.totalRequests | number }}</span>
+          <span class="metric-label">Total API Requests</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-icon>today</mat-icon>
+        <div class="metric-content">
+          <span class="metric-value">{{ stats()!.requestsToday | number }}</span>
+          <span class="metric-label">Requests Today</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-icon>speed</mat-icon>
+        <div class="metric-content">
+          <span class="metric-value">{{ stats()!.averageResponseTime | number:'1.0-0' }}ms</span>
+          <span class="metric-label">Avg Response Time</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-icon>cached</mat-icon>
+        <div class="metric-content">
+          <span class="metric-value">{{ stats()!.cacheHitRate | percent:'1.1-1' }}</span>
+          <span class="metric-label">Cache Hit Rate</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-icon>cloud</mat-icon>
+        <div class="metric-content">
+          <span class="metric-value">{{ stats()!.externalApiCalls | number }}</span>
+          <span class="metric-label">External API Calls</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <mat-icon>people</mat-icon>
+        <div class="metric-content">
+          <span class="metric-value">{{ stats()!.activeUsers | number }}</span>
+          <span class="metric-label">Active Users</span>
+        </div>
+      </mat-card>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links">
+      <h2>Quick Actions</h2>
+      <div class="links-grid">
+        <mat-card class="link-card" routerLink="/admin/health">
+          <mat-icon>health_and_safety</mat-icon>
+          <span>System Health</span>
+        </mat-card>
+        <mat-card class="link-card" routerLink="/admin/cache">
+          <mat-icon>memory</mat-icon>
+          <span>Cache Management</span>
+        </mat-card>
+        <mat-card class="link-card" routerLink="/admin/logs">
+          <mat-icon>article</mat-icon>
+          <span>System Logs</span>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- Top Endpoints -->
+    <section class="top-endpoints">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>trending_up</mat-icon>
+          <mat-card-title>Top Endpoints</mat-card-title>
+          <mat-card-subtitle>Most frequently accessed endpoints</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (stats()!.topEndpoints && stats()!.topEndpoints.length > 0) {
+            <mat-list>
+              @for (endpoint of stats()!.topEndpoints; track endpoint.endpoint) {
+                <mat-list-item>
+                  <span matListItemTitle>
+                    <span class="method-badge" [class]="endpoint.method.toLowerCase()">{{ endpoint.method }}</span>
+                    {{ endpoint.endpoint }}
+                  </span>
+                  <span matListItemLine>
+                    {{ endpoint.count | number }} requests · {{ endpoint.averageTime | number:'1.0-0' }}ms avg
+                  </span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+              }
+            </mat-list>
+          } @else {
+            <p class="no-data">No endpoint data available</p>
+          }
+        </mat-card-content>
+      </mat-card>
+    </section>
+  }
+</div>

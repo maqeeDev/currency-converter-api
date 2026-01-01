@@ -1,0 +1,57 @@
+<mat-toolbar class="header-toolbar">
+  <button mat-icon-button (click)="toggleSidebar.emit()" class="menu-button">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <a routerLink="/dashboard" class="brand">
+    <mat-icon class="brand-icon">currency_exchange</mat-icon>
+    <span class="brand-text">Currency Converter</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <!-- Theme Toggle -->
+  <button
+    mat-icon-button
+    (click)="uiStore.toggleTheme()"
+    [matTooltip]="uiStore.isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+  >
+    <mat-icon>{{ uiStore.isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+
+  <!-- User Menu -->
+  @if (authStore.isLoggedIn()) {
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+      <mat-icon>account_circle</mat-icon>
+      <span class="username">{{ authStore.username() }}</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu" xPosition="before">
+      <div class="user-info">
+        <strong>{{ authStore.username() }}</strong>
+        <span class="user-email">{{ authStore.userEmail() }}</span>
+        <span class="user-role">{{ authStore.userRole() }}</span>
+      </div>
+      <mat-divider></mat-divider>
+
+      @if (authStore.isAdmin()) {
+        <a mat-menu-item routerLink="/admin/dashboard">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Admin Dashboard</span>
+        </a>
+        <mat-divider></mat-divider>
+      }
+
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  } @else {
+    <a mat-button routerLink="/auth/login">
+      <mat-icon>login</mat-icon>
+      Login
+    </a>
+  }
+</mat-toolbar>

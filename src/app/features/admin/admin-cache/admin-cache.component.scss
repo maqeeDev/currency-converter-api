@@ -1,0 +1,200 @@
+.cache-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: #666;
+  }
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.stats-section {
+  margin-bottom: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  gap: 1rem;
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #2c3e50;
+  }
+
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #666;
+  }
+}
+
+.hit-rate-card {
+  .hit-rate-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .hit-rate-value {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #27ae60;
+      min-width: 80px;
+    }
+
+    mat-progress-bar {
+      flex: 1;
+      height: 12px;
+      border-radius: 6px;
+    }
+  }
+
+  .hit-rate-breakdown {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #666;
+
+    .separator {
+      margin: 0 0.25rem;
+    }
+  }
+}
+
+.items-section {
+  margin-bottom: 2rem;
+
+  .cache-key {
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
+
+  .no-items {
+    text-align: center;
+    color: #666;
+    padding: 2rem;
+  }
+}
+
+.operations-section {
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+}
+
+.operations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.operation-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  span {
+    font-weight: 500;
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+:host-context(.dark-theme) {
+  .page-header h1 {
+    color: #fff;
+  }
+
+  .page-header p {
+    color: #aaa;
+  }
+
+  .stat-card {
+    mat-icon {
+      color: #64b5f6;
+    }
+
+    .stat-value {
+      color: #fff;
+    }
+
+    .stat-label {
+      color: #aaa;
+    }
+  }
+
+  .hit-rate-breakdown {
+    color: #aaa;
+  }
+
+  .operations-section h2 {
+    color: #fff;
+  }
+
+  .operation-card mat-icon {
+    color: #64b5f6;
+  }
+}

@@ -1,0 +1,45 @@
+.confirm-dialog {
+  min-width: 300px;
+  max-width: 450px;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 1rem 1.5rem;
+
+  mat-icon {
+    &.icon-warn {
+      color: #e74c3c;
+    }
+    &.icon-primary {
+      color: #2c3e50;
+    }
+    &.icon-accent {
+      color: #27ae60;
+    }
+  }
+}
+
+.dialog-message {
+  margin: 0;
+  line-height: 1.5;
+  color: #666;
+}
+
+mat-dialog-content {
+  padding: 0 1.5rem 1rem;
+}
+
+mat-dialog-actions {
+  padding: 1rem 1.5rem;
+  gap: 0.5rem;
+}
+
+:host-context(.dark-theme) {
+  .dialog-message {
+    color: #aaa;
+  }
+}

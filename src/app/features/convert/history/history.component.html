@@ -1,0 +1,215 @@
+<div class="history-container">
+  <header class="page-header">
+    <div>
+      <h1>Conversion History</h1>
+      <p>View and export your past currency conversions</p>
+    </div>
+    <div class="header-actions">
+      <button
+        mat-stroked-button
+        (click)="exportToCsv()"
+        [disabled]="conversionStore.history().length === 0"
+      >
+        <mat-icon>download</mat-icon>
+        Export CSV
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <mat-card class="stat-card">
+      <mat-icon>swap_horiz</mat-icon>
+      <div class="stat-content">
+        <span class="stat-value">{{ conversionStore.totalHistoryCount() }}</span>
+        <span class="stat-label">Total Conversions</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-icon>star</mat-icon>
+      <div class="stat-content">
+        <span class="stat-value">{{ conversionStore.favorites().length }}</span>
+        <span class="stat-label">Favorite Pairs</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-icon>history</mat-icon>
+      <div class="stat-content">
+        <span class="stat-value">{{ conversionStore.recentConversions().length }}</span>
+        <span class="stat-label">Recent (24h)</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-row">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>From Currency</mat-label>
+          <mat-select [(ngModel)]="filters.fromCurrency" (selectionChange)="applyFilters()">
+            <mat-option [value]="undefined">All</mat-option>
+            @for (currency of currencyStore.currencies(); track currency.code) {
+              <mat-option [value]="currency.code">{{ currency.code }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>To Currency</mat-label>
+          <mat-select [(ngModel)]="filters.toCurrency" (selectionChange)="applyFilters()">
+            <mat-option [value]="undefined">All</mat-option>
+            @for (currency of currencyStore.currencies(); track currency.code) {
+              <mat-option [value]="currency.code">{{ currency.code }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" [(ngModel)]="filters.startDate" (dateChange)="applyFilters()">
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="filters.endDate" (dateChange)="applyFilters()">
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="clearFilters()" matTooltip="Clear filters">
+          <mat-icon>clear</mat-icon>
+        </button>
+
+        <button mat-icon-button (click)="refresh()" [disabled]="conversionStore.isLoading()" matTooltip="Refresh">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- History Table -->
+  <mat-card>
+    <mat-card-content>
+      @if (conversionStore.isLoading()) {
+        <app-loading-spinner message="Loading history..."></app-loading-spinner>
+      } @else if (conversionStore.error()) {
+        <app-error-alert
+          [message]="conversionStore.error()!"
+          [retryable]="true"
+          (onRetry)="refresh()"
+        ></app-error-alert>
+      } @else if (conversionStore.history().length === 0) {
+        <div class="empty-state">
+          <mat-icon>history</mat-icon>
+          <h3>No conversion history</h3>
+          <p>Start converting currencies to see your history here</p>
+          <a mat-flat-button color="primary" routerLink="/convert">
+            <mat-icon>currency_exchange</mat-icon>
+            Convert Now
+          </a>
+        </div>
+      } @else {
+        <!-- Desktop Table -->
+        <div class="table-container desktop-view">
+          <table mat-table [dataSource]="conversionStore.history()">
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let item">
+                {{ formatDate(item.createdAt) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fromCurrency">
+              <th mat-header-cell *matHeaderCellDef>From</th>
+              <td mat-cell *matCellDef="let item">
+                <span class="currency-badge">{{ item.fromCurrency }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="originalAmount">
+              <th mat-header-cell *matHeaderCellDef>Amount</th>
+              <td mat-cell *matCellDef="let item">
+                {{ item.originalAmount | number:'1.2-2' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="toCurrency">
+              <th mat-header-cell *matHeaderCellDef>To</th>
+              <td mat-cell *matCellDef="let item">
+                <span class="currency-badge accent">{{ item.toCurrency }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="convertedAmount">
+              <th mat-header-cell *matHeaderCellDef>Result</th>
+              <td mat-cell *matCellDef="let item">
+                <strong class="result-amount">{{ item.convertedAmount | number:'1.2-4' }}</strong>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="exchangeRate">
+              <th mat-header-cell *matHeaderCellDef>Rate</th>
+              <td mat-cell *matCellDef="let item">
+                {{ item.exchangeRate | number:'1.4-6' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let item">
+                <span class="status-badge" [class.success]="item.status === 'Completed'" [class.failed]="item.status === 'Failed'">
+                  {{ item.status }}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="mobile-view">
+          @for (item of conversionStore.history(); track item.id) {
+            <mat-card class="history-card">
+              <div class="card-header">
+                <span class="date">{{ formatDate(item.createdAt) }}</span>
+                <span class="status-badge" [class.success]="item.status === 'Completed'">
+                  {{ item.status }}
+                </span>
+              </div>
+              <div class="card-body">
+                <div class="conversion-flow">
+                  <div class="from">
+                    <span class="amount">{{ item.originalAmount | number:'1.2-2' }}</span>
+                    <span class="currency">{{ item.fromCurrency }}</span>
+                  </div>
+                  <mat-icon>arrow_forward</mat-icon>
+                  <div class="to">
+                    <span class="amount">{{ item.convertedAmount | number:'1.2-4' }}</span>
+                    <span class="currency">{{ item.toCurrency }}</span>
+                  </div>
+                </div>
+                <div class="rate">Rate: {{ item.exchangeRate | number:'1.4-6' }}</div>
+              </div>
+            </mat-card>
+          }
+        </div>
+
+        <mat-paginator
+          [length]="conversionStore.totalHistoryCount()"
+          [pageSize]="conversionStore.pageSize()"
+          [pageIndex]="conversionStore.currentPage() - 1"
+          [pageSizeOptions]="[10, 25, 50, 100]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        ></mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

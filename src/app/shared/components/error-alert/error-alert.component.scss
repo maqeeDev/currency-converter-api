@@ -1,0 +1,49 @@
+.error-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  color: #721c24;
+
+  &.dismissible {
+    padding-right: 0.5rem;
+  }
+}
+
+.error-icon {
+  color: #e74c3c;
+  flex-shrink: 0;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-title {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.error-message {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.retry-button {
+  margin-top: 0.75rem;
+}
+
+.dismiss-button {
+  flex-shrink: 0;
+}
+
+:host-context(.dark-theme) {
+  .error-alert {
+    background: rgba(231, 76, 60, 0.15);
+    border-color: rgba(231, 76, 60, 0.3);
+    color: #f8d7da;
+  }
+}

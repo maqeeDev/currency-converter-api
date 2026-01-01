@@ -1,0 +1,105 @@
+@use 'variables' as *;
+
+// Light Theme (default)
+:root {
+  --primary-color: #{$primary-color};
+  --primary-light: #{$primary-light};
+  --primary-dark: #{$primary-dark};
+
+  --accent-color: #{$accent-color};
+  --accent-light: #{$accent-light};
+  --accent-dark: #{$accent-dark};
+
+  --warn-color: #{$warn-color};
+  --warning-color: #{$warning-color};
+
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-disabled: #{$text-disabled};
+
+  --background: #{$background-light};
+  --surface: #{$background-white};
+  --card: #{$background-white};
+  --border: #{$border-color};
+
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+}
+
+// Dark Theme
+.dark-theme,
+[data-theme="dark"] {
+  --primary-color: #64b5f6;
+  --primary-light: #90caf9;
+  --primary-dark: #42a5f5;
+
+  --accent-color: #81c784;
+  --accent-light: #a5d6a7;
+  --accent-dark: #66bb6a;
+
+  --text-primary: #{$dark-text-primary};
+  --text-secondary: #{$dark-text-secondary};
+  --text-disabled: #666666;
+
+  --background: #{$dark-background};
+  --surface: #{$dark-surface};
+  --card: #{$dark-card};
+  --border: #{$dark-border};
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+// Angular Material Theme Customization
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--card);
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: var(--surface);
+}
+
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: var(--surface);
+  --mdc-snackbar-supporting-text-color: var(--text-primary);
+}
+
+// Dark theme specific Material overrides
+.dark-theme {
+  .mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: rgba(255, 255, 255, 0.05);
+    --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .mat-mdc-table {
+    --mat-table-background-color: var(--surface);
+    --mat-table-header-headline-color: var(--text-primary);
+    --mat-table-row-item-label-text-color: var(--text-primary);
+  }
+
+  .mat-mdc-paginator {
+    --mat-paginator-container-background-color: var(--surface);
+    --mat-paginator-container-text-color: var(--text-primary);
+  }
+
+  .mat-mdc-select {
+    --mat-select-trigger-text-color: var(--text-primary);
+  }
+
+  .mat-mdc-option {
+    --mat-option-selected-state-label-text-color: var(--accent-color);
+  }
+
+  .mat-mdc-list-item {
+    --mdc-list-list-item-label-text-color: var(--text-primary);
+    --mdc-list-list-item-supporting-text-color: var(--text-secondary);
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}

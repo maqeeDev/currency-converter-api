@@ -1,0 +1,20 @@
+<div class="error-alert" [class.dismissible]="dismissible">
+  <mat-icon class="error-icon">error_outline</mat-icon>
+  <div class="error-content">
+    @if (title) {
+      <strong class="error-title">{{ title }}</strong>
+    }
+    <p class="error-message">{{ message }}</p>
+    @if (retryable) {
+      <button mat-stroked-button color="warn" (click)="onRetry.emit()" class="retry-button">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    }
+  </div>
+  @if (dismissible) {
+    <button mat-icon-button (click)="onDismiss.emit()" class="dismiss-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+</div>

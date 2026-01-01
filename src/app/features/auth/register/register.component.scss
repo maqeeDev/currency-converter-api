@@ -1,0 +1,108 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #2c3e50 0%, #27ae60 100%);
+}
+
+.register-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 1rem;
+}
+
+mat-card-header {
+  margin-bottom: 1.5rem;
+}
+
+.register-icon {
+  background: #27ae60;
+  color: white;
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.submit-button {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+
+  mat-spinner {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  color: #721c24;
+  margin-bottom: 1rem;
+
+  mat-icon {
+    color: #dc3545;
+  }
+}
+
+.password-strength {
+  margin: -8px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  mat-progress-bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+  }
+
+  .strength-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    min-width: 60px;
+
+    &.weak {
+      color: #e74c3c;
+    }
+    &.fair {
+      color: #e67e22;
+    }
+    &.good {
+      color: #f1c40f;
+    }
+    &.strong {
+      color: #27ae60;
+    }
+  }
+}
+
+.login-prompt {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+:host-context(.dark-theme) {
+  .register-container {
+    background: linear-gradient(135deg, #1a252f 0%, #1e5631 100%);
+  }
+}

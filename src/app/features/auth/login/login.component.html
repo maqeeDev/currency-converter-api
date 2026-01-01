@@ -1,0 +1,93 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="login-icon">currency_exchange</mat-icon>
+      <mat-card-title>Welcome Back</mat-card-title>
+      <mat-card-subtitle>Sign in to Currency Converter</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (registeredMessage()) {
+        <div class="success-message">
+          <mat-icon>check_circle</mat-icon>
+          <span>Registration successful! Please sign in.</span>
+        </div>
+      }
+
+      @if (authStore.error()) {
+        <div class="error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ authStore.error() }}</span>
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            placeholder="Enter your username"
+            autocomplete="username"
+          />
+          <mat-icon matSuffix>person</mat-icon>
+          @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
+            <mat-error>Username is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword.set(!hidePassword())"
+            [attr.aria-label]="'Hide password'"
+          >
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+            <mat-error>Password is required</mat-error>
+          }
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="full-width submit-button"
+          [disabled]="loginForm.invalid || authStore.isLoading()"
+        >
+          @if (authStore.isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Signing in...</span>
+          } @else {
+            <mat-icon>login</mat-icon>
+            <span>Sign In</span>
+          }
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <span class="register-prompt">Don't have an account?</span>
+      <a mat-button color="primary" routerLink="/auth/register">
+        Create Account
+      </a>
+    </mat-card-actions>
+  </mat-card>
+
+  <div class="demo-credentials">
+    <p><strong>Demo Credentials:</strong></p>
+    <p>Admin: admin / Password123!</p>
+    <p>User: testuser / Password123!</p>
+  </div>
+</div>

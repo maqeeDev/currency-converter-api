@@ -1,0 +1,135 @@
+<div class="logs-container">
+  <header class="page-header">
+    <div>
+      <h1>System Logs</h1>
+      <p>View and analyze application logs</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button (click)="exportLogs()" [disabled]="logs().length === 0">
+        <mat-icon>download</mat-icon>
+        Export
+      </button>
+      <button mat-stroked-button color="warn" (click)="confirmClearLogs()">
+        <mat-icon>delete</mat-icon>
+        Clear Logs
+      </button>
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-row">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Log Level</mat-label>
+          <mat-select [(ngModel)]="filters.level" (selectionChange)="applyFilters()">
+            <mat-option [value]="undefined">All Levels</mat-option>
+            <mat-option value="Error">Error</mat-option>
+            <mat-option value="Warning">Warning</mat-option>
+            <mat-option value="Information">Information</mat-option>
+            <mat-option value="Debug">Debug</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field search-field">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="filters.search" (keyup.enter)="applyFilters()" placeholder="Search messages...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="clearFilters()" matTooltip="Clear filters">
+          <mat-icon>clear</mat-icon>
+        </button>
+
+        <button mat-icon-button (click)="refresh()" [disabled]="isLoading()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Logs -->
+  <mat-card>
+    <mat-card-content>
+      @if (isLoading()) {
+        <app-loading-spinner message="Loading logs..."></app-loading-spinner>
+      } @else if (error()) {
+        <app-error-alert [message]="error()!" [retryable]="true" (onRetry)="refresh()"></app-error-alert>
+      } @else if (logs().length === 0) {
+        <div class="empty-state">
+          <mat-icon>article</mat-icon>
+          <h3>No logs found</h3>
+          <p>There are no logs matching your filters</p>
+        </div>
+      } @else {
+        <mat-accordion multi>
+          @for (log of logs(); track log.id) {
+            <mat-expansion-panel class="log-panel" [class]="getLevelClass(log.level)">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="level-badge" [class]="getLevelClass(log.level)">{{ log.level }}</span>
+                  <span class="log-message">{{ log.message | slice:0:100 }}{{ log.message.length > 100 ? '...' : '' }}</span>
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{ formatDate(log.timestamp) }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="log-details">
+                <div class="detail-row">
+                  <strong>Timestamp:</strong>
+                  <span>{{ formatDate(log.timestamp) }}</span>
+                </div>
+                @if (log.errorCode) {
+                  <div class="detail-row">
+                    <strong>Error Code:</strong>
+                    <span class="error-code">{{ log.errorCode }}</span>
+                  </div>
+                }
+                @if (log.endpoint) {
+                  <div class="detail-row">
+                    <strong>Endpoint:</strong>
+                    <span>{{ log.endpoint }}</span>
+                  </div>
+                }
+                @if (log.correlationId) {
+                  <div class="detail-row">
+                    <strong>Correlation ID:</strong>
+                    <code>{{ log.correlationId }}</code>
+                  </div>
+                }
+                @if (log.userId) {
+                  <div class="detail-row">
+                    <strong>User ID:</strong>
+                    <span>{{ log.userId }}</span>
+                  </div>
+                }
+
+                <div class="message-section">
+                  <strong>Message:</strong>
+                  <pre class="message-text">{{ log.message }}</pre>
+                </div>
+
+                @if (log.stackTrace) {
+                  <div class="stack-trace-section">
+                    <strong>Stack Trace:</strong>
+                    <pre class="stack-trace">{{ log.stackTrace }}</pre>
+                  </div>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
+        </mat-accordion>
+
+        <mat-paginator
+          [length]="totalCount()"
+          [pageSize]="pageSize()"
+          [pageIndex]="pageIndex()"
+          [pageSizeOptions]="[25, 50, 100]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        ></mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

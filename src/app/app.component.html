@@ -1,0 +1,9 @@
+@if (showLayout()) {
+  <app-header (toggleSidebar)="uiStore.toggleSidebar()"></app-header>
+  <app-sidebar [collapsed]="uiStore.sidebarCollapsed()"></app-sidebar>
+  <main class="main-content" [class.sidebar-collapsed]="uiStore.sidebarCollapsed()">
+    <router-outlet></router-outlet>
+  </main>
+} @else {
+  <router-outlet></router-outlet>
+}

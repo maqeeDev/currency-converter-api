@@ -1,0 +1,131 @@
+<div class="cache-container">
+  <header class="page-header">
+    <div>
+      <h1>Cache Management</h1>
+      <p>Monitor and manage application cache</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button (click)="refresh()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <button mat-flat-button color="warn" (click)="confirmClearAll()" [disabled]="isLoading()">
+        <mat-icon>delete_sweep</mat-icon>
+        Clear All
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading cache stats..."></app-loading-spinner>
+  } @else if (error()) {
+    <app-error-alert [message]="error()!" [retryable]="true" (onRetry)="refresh()"></app-error-alert>
+  } @else if (stats()) {
+    <!-- Cache Statistics -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-icon>inventory_2</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ stats()!.totalItems | number }}</span>
+            <span class="stat-label">Cached Items</span>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon>sd_storage</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ stats()!.memoryUsage }}</span>
+            <span class="stat-label">Memory Usage</span>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon>check_circle</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ stats()!.hitCount | number }}</span>
+            <span class="stat-label">Cache Hits</span>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon>cancel</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ stats()!.missCount | number }}</span>
+            <span class="stat-label">Cache Misses</span>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- Hit Rate -->
+      <mat-card class="hit-rate-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>trending_up</mat-icon>
+          <mat-card-title>Cache Hit Rate</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="hit-rate-display">
+            <span class="hit-rate-value">{{ stats()!.hitRate | percent:'1.1-1' }}</span>
+            <mat-progress-bar
+              mode="determinate"
+              [value]="stats()!.hitRate * 100"
+              [color]="getHitRateColor(stats()!.hitRate)"
+            ></mat-progress-bar>
+          </div>
+          <div class="hit-rate-breakdown">
+            <span class="hits">{{ stats()!.hitCount | number }} hits</span>
+            <span class="separator">/</span>
+            <span class="total">{{ stats()!.hitCount + stats()!.missCount | number }} total</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <!-- Recent Cache Items -->
+    <section class="items-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>list</mat-icon>
+          <mat-card-title>Recently Cached Items</mat-card-title>
+          <mat-card-subtitle>Most recent items added to cache</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (stats()!.recentItems && stats()!.recentItems.length > 0) {
+            <mat-list>
+              @for (item of stats()!.recentItems; track item.key) {
+                <mat-list-item>
+                  <mat-icon matListItemIcon>cached</mat-icon>
+                  <div matListItemTitle class="cache-key">{{ item.key }}</div>
+                  <div matListItemLine>
+                    Size: {{ item.size }} · Expires: {{ formatDate(item.expiresAt) }}
+                  </div>
+                </mat-list-item>
+              }
+            </mat-list>
+          } @else {
+            <p class="no-items">No cached items to display</p>
+          }
+        </mat-card-content>
+      </mat-card>
+    </section>
+
+    <!-- Cache Operations -->
+    <section class="operations-section">
+      <h2>Cache Operations</h2>
+      <div class="operations-grid">
+        <mat-card class="operation-card" (click)="clearExchangeRates()">
+          <mat-icon>currency_exchange</mat-icon>
+          <span>Clear Exchange Rates</span>
+        </mat-card>
+        <mat-card class="operation-card" (click)="clearCurrencies()">
+          <mat-icon>attach_money</mat-icon>
+          <span>Clear Currencies</span>
+        </mat-card>
+        <mat-card class="operation-card" (click)="syncRates()">
+          <mat-icon>sync</mat-icon>
+          <span>Force Sync Rates</span>
+        </mat-card>
+      </div>
+    </section>
+  }
+</div>

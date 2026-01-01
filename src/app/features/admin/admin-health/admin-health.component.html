@@ -1,0 +1,68 @@
+<div class="health-container">
+  <header class="page-header">
+    <div>
+      <h1>System Health</h1>
+      <p>Monitor system components and services</p>
+    </div>
+    <div class="header-actions">
+      <mat-slide-toggle [(ngModel)]="autoRefresh" (change)="toggleAutoRefresh()">
+        Auto-refresh
+      </mat-slide-toggle>
+      <button mat-stroked-button (click)="refresh()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading()) {
+    <app-loading-spinner message="Checking health status..."></app-loading-spinner>
+  } @else if (error()) {
+    <app-error-alert [message]="error()!" [retryable]="true" (onRetry)="refresh()"></app-error-alert>
+  } @else if (health()) {
+    <!-- Overall Status -->
+    <mat-card class="overall-status" [class]="getStatusClass(health()!.status)">
+      <div class="status-icon">
+        <mat-icon>{{ getStatusIcon(health()!.status) }}</mat-icon>
+      </div>
+      <div class="status-content">
+        <h2>{{ health()!.status }}</h2>
+        <p>Total check duration: {{ health()!.totalDuration }}</p>
+        @if (lastChecked()) {
+          <p class="last-checked">Last checked {{ formatLastChecked() }}</p>
+        }
+      </div>
+    </mat-card>
+
+    <!-- Component Health -->
+    <section class="components-section">
+      <h2>Component Status</h2>
+      <div class="components-grid">
+        @for (entry of health()!.entries; track entry.name) {
+          <mat-card class="component-card" [class]="getStatusClass(entry.status)">
+            <div class="component-header">
+              <mat-icon>{{ getComponentIcon(entry.name) }}</mat-icon>
+              <span class="component-name">{{ entry.name }}</span>
+              <span class="status-badge" [class]="getStatusClass(entry.status)">
+                {{ entry.status }}
+              </span>
+            </div>
+            <div class="component-body">
+              @if (entry.description) {
+                <p class="description">{{ entry.description }}</p>
+              }
+              <p class="duration">Duration: {{ entry.duration }}</p>
+              @if (entry.tags && entry.tags.length > 0) {
+                <div class="tags">
+                  @for (tag of entry.tags; track tag) {
+                    <span class="tag">{{ tag }}</span>
+                  }
+                </div>
+              }
+            </div>
+          </mat-card>
+        }
+      </div>
+    </section>
+  }
+</div>

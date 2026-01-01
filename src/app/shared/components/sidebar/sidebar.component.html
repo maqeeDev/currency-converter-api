@@ -1,0 +1,40 @@
+<nav class="sidebar" [class.collapsed]="collapsed">
+  <mat-nav-list>
+    @for (item of navItems; track item.route) {
+      @if (!item.adminOnly || authStore.isAdmin()) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+          class="nav-item"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          @if (!collapsed) {
+            <span matListItemTitle>{{ item.label }}</span>
+          }
+        </a>
+      }
+    }
+
+    @if (authStore.isAdmin()) {
+      <mat-divider></mat-divider>
+
+      <div class="section-title" [class.hidden]="collapsed">Admin</div>
+
+      @for (item of adminNavItems; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-item"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          @if (!collapsed) {
+            <span matListItemTitle>{{ item.label }}</span>
+          }
+        </a>
+      }
+    }
+  </mat-nav-list>
+</nav>

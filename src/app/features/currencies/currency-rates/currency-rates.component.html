@@ -1,0 +1,97 @@
+<div class="rates-container">
+  <header class="page-header">
+    <h1>Exchange Rates</h1>
+    <p>Current exchange rates from {{ currencyStore.baseCurrency() }}</p>
+  </header>
+
+  <mat-card class="controls-card">
+    <mat-card-content>
+      <div class="controls-row">
+        <mat-form-field appearance="outline" class="base-currency-field">
+          <mat-label>Base Currency</mat-label>
+          <mat-select
+            [value]="currencyStore.baseCurrency()"
+            (selectionChange)="onBaseCurrencyChange($event.value)"
+          >
+            @for (currency of currencyStore.currencies(); track currency.code) {
+              <mat-option [value]="currency.code">
+                {{ currency.code }} - {{ currency.name }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Filter rates</mat-label>
+          <input
+            matInput
+            [(ngModel)]="searchTerm"
+            placeholder="Search by currency code"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="actions">
+          <button
+            mat-icon-button
+            (click)="refresh()"
+            [disabled]="currencyStore.isLoading()"
+            matTooltip="Refresh rates"
+          >
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      @if (currencyStore.lastUpdated()) {
+        <p class="last-updated">
+          <mat-icon>schedule</mat-icon>
+          Last updated {{ formatLastUpdated() }}
+        </p>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="rates-card">
+    <mat-card-content>
+      @if (currencyStore.isLoading()) {
+        <app-loading-spinner message="Loading exchange rates..."></app-loading-spinner>
+      } @else if (currencyStore.error()) {
+        <app-error-alert
+          [message]="currencyStore.error()!"
+          [retryable]="true"
+          (onRetry)="refresh()"
+        ></app-error-alert>
+      } @else {
+        <div class="rates-grid">
+          @for (rate of filteredRates(); track rate.code) {
+            <div class="rate-card" (click)="copyRate(rate)">
+              <div class="rate-header">
+                <span class="currency-code">{{ rate.code }}</span>
+                <button
+                  mat-icon-button
+                  class="copy-button"
+                  (click)="copyRate(rate); $event.stopPropagation()"
+                  matTooltip="Copy rate"
+                >
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+              </div>
+              <div class="rate-value">{{ rate.rate | number:'1.4-6' }}</div>
+              <div class="rate-info">
+                1 {{ currencyStore.baseCurrency() }} = {{ rate.rate | number:'1.4-6' }} {{ rate.code }}
+              </div>
+            </div>
+          }
+
+          @if (filteredRates().length === 0) {
+            <div class="no-results">
+              <mat-icon>search_off</mat-icon>
+              <p>No currencies matching "{{ searchTerm }}"</p>
+            </div>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

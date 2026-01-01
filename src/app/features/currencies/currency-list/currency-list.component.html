@@ -1,0 +1,108 @@
+<div class="currency-list-container">
+  <header class="page-header">
+    <h1>Currencies</h1>
+    <p>Browse all supported currencies</p>
+  </header>
+
+  <mat-card>
+    <!-- Search and Filter -->
+    <mat-card-content>
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search currencies</mat-label>
+          <input
+            matInput
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearch($event)"
+            placeholder="Search by code, name, or country"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <button mat-icon-button (click)="refresh()" [disabled]="currencyStore.isLoading()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      @if (currencyStore.isLoading()) {
+        <app-loading-spinner message="Loading currencies..."></app-loading-spinner>
+      } @else if (currencyStore.error()) {
+        <app-error-alert
+          [message]="currencyStore.error()!"
+          [retryable]="true"
+          (onRetry)="refresh()"
+        ></app-error-alert>
+      } @else {
+        <!-- Desktop Table View -->
+        <div class="table-container desktop-view">
+          <table mat-table [dataSource]="filteredCurrencies()" matSort (matSortChange)="sortChange($event)">
+            <!-- Code Column -->
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+              <td mat-cell *matCellDef="let currency">
+                <strong class="currency-code">{{ currency.code }}</strong>
+              </td>
+            </ng-container>
+
+            <!-- Symbol Column -->
+            <ng-container matColumnDef="symbol">
+              <th mat-header-cell *matHeaderCellDef>Symbol</th>
+              <td mat-cell *matCellDef="let currency">
+                <span class="currency-symbol">{{ currency.symbol }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td mat-cell *matCellDef="let currency">{{ currency.name }}</td>
+            </ng-container>
+
+            <!-- Country Column -->
+            <ng-container matColumnDef="country">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+              <td mat-cell *matCellDef="let currency">{{ currency.country || '-' }}</td>
+            </ng-container>
+
+            <!-- Decimal Places Column -->
+            <ng-container matColumnDef="decimalPlaces">
+              <th mat-header-cell *matHeaderCellDef>Decimals</th>
+              <td mat-cell *matCellDef="let currency">{{ currency.decimalPlaces }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="mobile-view">
+          @for (currency of paginatedCurrencies(); track currency.code) {
+            <mat-card class="currency-card">
+              <div class="card-header">
+                <span class="currency-code">{{ currency.code }}</span>
+                <span class="currency-symbol">{{ currency.symbol }}</span>
+              </div>
+              <div class="card-body">
+                <p class="currency-name">{{ currency.name }}</p>
+                @if (currency.country) {
+                  <p class="currency-country">{{ currency.country }}</p>
+                }
+              </div>
+            </mat-card>
+          }
+        </div>
+
+        <!-- Pagination -->
+        <mat-paginator
+          [length]="filteredCurrencies().length"
+          [pageSize]="pageSize()"
+          [pageIndex]="pageIndex()"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        ></mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

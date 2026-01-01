@@ -1,0 +1,54 @@
+.not-found-container {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.content {
+  max-width: 400px;
+}
+
+.error-icon {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 6rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #666;
+  margin: 0.5rem 0 1rem;
+}
+
+p {
+  color: #999;
+  margin-bottom: 2rem;
+}
+
+a mat-icon {
+  margin-right: 8px;
+}
+
+:host-context(.dark-theme) {
+  h1 {
+    color: #fff;
+  }
+
+  h2 {
+    color: #aaa;
+  }
+}

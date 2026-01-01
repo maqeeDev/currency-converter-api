@@ -1,0 +1,174 @@
+.rates-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+
+  p {
+    margin: 0.25rem 0 0;
+    color: #666;
+  }
+}
+
+.controls-card {
+  margin-bottom: 1.5rem;
+}
+
+.controls-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.base-currency-field {
+  min-width: 250px;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 4px;
+}
+
+.last-updated {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.rates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.rate-card {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.rate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.currency-code {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-family: monospace;
+}
+
+.copy-button {
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  .rate-card:hover & {
+    opacity: 1;
+  }
+}
+
+.rate-value {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #27ae60;
+  margin-bottom: 0.25rem;
+}
+
+.rate-info {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 576px) {
+  .controls-row {
+    flex-direction: column;
+  }
+
+  .base-currency-field,
+  .search-field {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+:host-context(.dark-theme) {
+  .page-header {
+    h1 {
+      color: #fff;
+    }
+
+    p {
+      color: #aaa;
+    }
+  }
+
+  .last-updated {
+    color: #aaa;
+  }
+
+  .rate-card {
+    background: #2a2a2a;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .currency-code {
+    color: #64b5f6;
+  }
+
+  .rate-info {
+    color: #aaa;
+  }
+}
